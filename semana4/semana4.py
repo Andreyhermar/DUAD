@@ -1,0 +1,5 @@
+horas_trabajadas=input("Ingrese sus horas trabajadas\n")
+tarifa_por_hora=input("Ingrese su tarifa por hora\n")
+salario = int(horas_trabajadas)*int(tarifa_por_hora)
+print("Su salario sera de: ", salario)
+print(salario)
