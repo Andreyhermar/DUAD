@@ -2,6 +2,10 @@ import csv
 import os
 
 def save_students_to_csv(students, filename):
+    if not students:
+        print("\nNo hay estudiantes para exportar.")
+        return
+
     with open(filename, mode='w', newline='', encoding='utf-8') as file:
         writer = csv.DictWriter(file, fieldnames=[
             "first_name", "second_name", "last_name", "second_last_name",
@@ -22,6 +26,7 @@ def save_students_to_csv(students, filename):
                 "science": student["grades"]["science"]
             }
             writer.writerow(row)
+    print(f"\n✅ {len(students)} estudiantes exportados a {filename}")
 
 def load_students_from_csv(filename):
     students = []
@@ -46,6 +51,9 @@ def load_students_from_csv(filename):
                     }
                 }
                 students.append(student)
-    except FileNotFoundError:
-        print("There is no students list previously created, We'll start with a new students list.") # First run, file doesn't exist yet
+        print(f"\n✅ {len(students)} estudiantes importados desde {filename}")
+    except Exception as e:
+        print(f"⚠️ Error al cargar estudiantes: {e}")
+    # except FileNotFoundError: 
+    #     print("There is no students list previously created, We'll start with a new students list.") # First run, file doesn't exist yet
     return students

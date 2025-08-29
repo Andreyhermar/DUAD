@@ -8,8 +8,10 @@ def show_main_menu():
     print("4. Delete Student")
     print("5. Top 3 Students")
     print("6. Average per section")
-    print("7. Exit Program")
-    return get_user_choice(7)
+    print("7. Import Students from CSV")
+    print("8. Export Students to CSV")
+    print("9. Exit Program")
+    return get_user_choice(9)
 
 def show_update_menu():
     print("\n--- Update Menu ---")

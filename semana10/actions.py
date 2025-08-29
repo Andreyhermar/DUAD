@@ -291,16 +291,29 @@ def delete_student(students):
 
 def display_student_info(students):
     print("\n--- Show Student Information ---")
-    student = find_student(students)
-    if not student:
+    
+    if not students:
+        print("No students found.")
         return
     
-    print("\n--- Student Information ---")
-    print(f"Name: {student['first_name']} {student.get('second_name', '')} {student['last_name']} {student.get('second_last_name', '')}")
-    print(f"Section: {student['section']}")
-    print("\nGrades:")
-    for subject, grade in student['grades'].items():
-        print(f"  {subject}: {grade}")
+    for i, student in enumerate(students, 1):
+        print(f"\n--- Student #{i} ---")
+        print(f"Name: {student['first_name']} {student.get('second_name', '')} "f"{student['last_name']} {student.get('second_last_name', '')}")
+        print(f"Section: {student['section']}")
+        print("Grades:")
+        for subject, grade in student['grades'].items():
+            print(f"  {subject}: {grade}")
+    # # print("\n--- Show Student Information ---")
+    # # student = find_student(students)
+    # # if not student:
+    #     return
+    
+    # print("\n--- Student Information ---")
+    # print(f"Name: {student['first_name']} {student.get('second_name', '')} {student['last_name']} {student.get('second_last_name', '')}")
+    # print(f"Section: {student['section']}")
+    # print("\nGrades:")
+    # for subject, grade in student['grades'].items():
+    #     print(f"  {subject}: {grade}")
 
 def check_students_exist(students):
     if not students:
