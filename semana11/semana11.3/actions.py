@@ -1,6 +1,36 @@
 from menu import show_update_menu, show_grades_menu
 import re
 
+class Student:
+    def __init__(self, first_name, last_name, section,
+                second_name="", second_last_name="", grades=None):
+        self.first_name = first_name
+        self.second_name = second_name
+        self.last_name = last_name
+        self.second_last_name = second_last_name
+        self.section = section
+        self.grades = grades if grades else {
+            "spanish": 0,
+            "english": 0,
+            "social studies": 0,
+            "science": 0
+        }
+
+    # Dictionary
+    def to_dict(self):
+        return {
+            "first_name": self.first_name,
+            "second_name": self.second_name,
+            "last_name": self.last_name,
+            "second_last_name": self.second_last_name,
+            "section": self.section,
+            "grades": self.grades
+        }
+
+    # Para imprimir el nombre completo
+    def full_name(self):
+        return f"{self.first_name} {self.second_name} {self.last_name} {self.second_last_name}".strip()
+
 def get_student_info():
     print("\n--- Add New Student ---")
 
@@ -40,25 +70,28 @@ def get_student_info():
             print(f"Invalid input. Enter a number between 1 and 100 for {subject}.")
 
     # Get grades
-    spanish = get_valid_grade("spanish")
-    english = get_valid_grade("english")
-    social_studies = get_valid_grade("social studies")
-    science = get_valid_grade("science")
-
-    # Return the student as a dictionary
-    return {
-        "first_name": first_name,
-        "second_name": second_name,
-        "last_name": last_name,
-        "second_last_name": second_last_name,
-        "section": section,
-        "grades": {
-            "spanish": spanish,
-            "english": english,
-            "social studies": social_studies,
-            "science": science
-        }
+    grades = {
+        "spanish" : get_valid_grade("spanish"),
+        "english" : get_valid_grade("english"),
+        "social_studies" : get_valid_grade("social studies"),
+        "science" : get_valid_grade("science")
     }
+
+    return Student(first_name, last_name, section, second_name, second_last_name, grades)
+    # Return the student as a dictionary
+    # return {
+    #     "first_name": first_name,
+    #     "second_name": second_name,
+    #     "last_name": last_name,
+    #     "second_last_name": second_last_name,
+    #     "section": section,
+    #     "grades": {
+    #         "spanish": spanish,
+    #         "english": english,
+    #         "social studies": social_studies,
+    #         "science": science
+    #     }
+    # }
 
 def add_student(students):
     student = get_student_info()
@@ -101,9 +134,9 @@ def find_student(students):
 
         matches = []
         for student in students:
-            if (student['first_name'].lower() == first_name.lower() and
-                student['last_name'].lower() == last_name.lower() and
-                student['section'].upper() == section.upper()):
+            if (student.first_name.lower() == first_name.lower() and
+                student.last_name.lower() == last_name.lower() and
+                student.section.upper() == section.upper()):
                 matches.append(student)
 
         if not matches:
@@ -121,7 +154,7 @@ def find_student(students):
 
         print(f"\nFound {len(matches)} matching students:")
         for idx, student in enumerate(matches, start=1):
-            full_name = f"{student['first_name']} {student.get('second_name', '')} {student['last_name']} {student.get('second_last_name', '')}"
+            full_name = student.full_name()
             print(f"{idx}. {full_name.strip()}")
 
         while True:
@@ -156,7 +189,7 @@ def update_student(students):
 # Actualizar sección
 def update_section(student):
     print("\n--- Update Section ---")
-    student['section'] = get_valid_section()
+    student.section = get_valid_section()
     print("Section updated successfully.")
 
 # Actualizar notas
@@ -181,7 +214,7 @@ def update_single_grade(student, subject_key):
         try:
             grade = int(input(f"Enter new grade for {subject_key}: "))
             if 1 <= grade <= 100:
-                student["grades"][subject_key] = grade
+                student.grades[subject_key] = grade
                 print(f"{subject_key} updated successfully.")
                 break
             else:
@@ -191,7 +224,7 @@ def update_single_grade(student, subject_key):
 
 def update_name(student):
     print("\n--- Update Full Name ---")
-    print(f"Current Name: {student['first_name']} {student.get('second_name', '')} {student['last_name']} {student.get('second_last_name', '')}")
+    print(f"Current Name: {student.full_name()}")
 
     new_first_name = input("Enter new first name (leave blank to keep current): ").strip()
     new_second_name = input("Enter new second name (leave blank to keep current): ").strip()
@@ -199,29 +232,28 @@ def update_name(student):
     new_second_last_name = input("Enter new second last name (leave blank to keep current): ").strip()
 
     if new_first_name:
-        student['first_name'] = new_first_name
+        student.first_name = new_first_name
     if new_second_name:
-        student['second_name'] = new_second_name
+        student.second_name = new_second_name
     else:
-        student['second_name'] = student.get('second_name', '')  # Ensure the field exists
+        student.second_name = student.get('second_name', '')  # Ensure the field exists
     if new_last_name:
-        student['last_name'] = new_last_name
+        student.last_name = new_last_name
     if new_second_last_name:
-        student['second_last_name'] = new_second_last_name
+        student.second_last_name = new_second_last_name
     else:
-        student['second_last_name'] = student.get('second_last_name', '')  # Ensure the field exists
+        student.second_last_name = student.get('second_last_name', '')  # Ensure the field exists
 
     print("Student full name updated successfully.")
 
 #calculate average
 def calculate_student_average(student):
-    grades = student.get('grades', {})
+    grades = student.grades
     if not grades:
         print("no grades")
         return 0
-    total = grades.get('spanish', 0) + grades.get('english', 0) + grades.get('social studies', 0) + grades.get('science', 0)
-    average = total / 4
-    return average
+    total = sum(grades.values())
+    return total / len(grades)
     
 def show_top_3_students(students):
     print("\n--- Top 3 Students ---")
@@ -239,8 +271,7 @@ def show_top_3_students(students):
     top_students = sorted(student_averages, key=lambda x: x[1], reverse=True)[:3]
 
     for student, avg in top_students:
-        full_name = f"{student['first_name']} {student.get('second_name', '')} {student['last_name']} {student.get('second_last_name', '')}".strip()
-        print(f"{full_name} - Section: {student['section']} - Average: {avg:.2f}")
+        print(f"{student.full_name()} - Section: {student.section} - Average: {avg:.2f}")
 
 
 def show_section_average(students):
@@ -252,7 +283,7 @@ def show_section_average(students):
         section = get_valid_section()
 
     # Filter students in that section
-        section_students = [s for s in students if s['section'].upper() == section]
+        section_students = [s for s in students if s.section.upper() == section]
     
         if not section_students:
             print(f"\nNo students found in section {section}.")
@@ -280,7 +311,7 @@ def delete_student(students):
         return  # No match found or user cancelled selection
 
     # Confirm deletion
-    full_name = f"{student['first_name']} {student.get('second_name', '')} {student['last_name']} {student.get('second_last_name', '')}".strip()
+    full_name = student.full_name()
     confirm = input(f"Are you sure you want to delete {full_name}? (y/n): ").strip().lower()
     
     if confirm == 'y':
@@ -298,10 +329,10 @@ def display_student_info(students):
     
     for i, student in enumerate(students, 1):
         print(f"\n--- Student #{i} ---")
-        print(f"Name: {student['first_name']} {student.get('second_name', '')} "f"{student['last_name']} {student.get('second_last_name', '')}")
-        print(f"Section: {student['section']}")
+        print(f"Name: {student.fullname()}")
+        print(f"Section: {student.section}")
         print("Grades:")
-        for subject, grade in student['grades'].items():
+        for subject, grade in student.grades.items():
             print(f"  {subject}: {grade}")
     # # print("\n--- Show Student Information ---")
     # # student = find_student(students)
