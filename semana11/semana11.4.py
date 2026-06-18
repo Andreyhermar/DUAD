@@ -26,6 +26,10 @@ class Torso:
         self.right_leg = right_leg
         self.left_leg = left_leg
 
+class Human:
+    def __init__(self, torso):
+        self.torso = torso
+
 head = Head()
 
 right_hand = Hand()
@@ -41,3 +45,5 @@ right_leg = Leg(right_foot)
 left_leg = Leg(left_foot)
 
 torso = Torso(head, right_arm, left_arm, right_leg, left_leg)
+
+human = Human(torso)

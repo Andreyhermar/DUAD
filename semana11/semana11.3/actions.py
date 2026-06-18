@@ -12,7 +12,7 @@ class Student:
         self.grades = grades if grades else {
             "spanish": 0,
             "english": 0,
-            "social studies": 0,
+            "social_studies": 0,
             "science": 0
         }
 
@@ -29,7 +29,13 @@ class Student:
 
     # Para imprimir el nombre completo
     def full_name(self):
-        return f"{self.first_name} {self.second_name} {self.last_name} {self.second_last_name}".strip()
+        parts = [
+            self.first_name,
+            self.second_name,
+            self.last_name,
+            self.second_last_name
+        ]
+        return " ".join(part for part in parts if part).strip()
 
 def get_student_info():
     print("\n--- Add New Student ---")
@@ -73,7 +79,7 @@ def get_student_info():
     grades = {
         "spanish" : get_valid_grade("spanish"),
         "english" : get_valid_grade("english"),
-        "social_studies" : get_valid_grade("social studies"),
+        "social_studies" : get_valid_grade("social_studies"),
         "science" : get_valid_grade("science")
     }
 
@@ -201,7 +207,7 @@ def update_grades(student):
         elif choice == 2:
             update_single_grade(student, 'english')
         elif choice == 3:
-            update_single_grade(student, 'social studies')
+            update_single_grade(student, 'social_studies')
         elif choice == 4:
             update_single_grade(student, 'science')
         elif choice == 5:
@@ -235,14 +241,10 @@ def update_name(student):
         student.first_name = new_first_name
     if new_second_name:
         student.second_name = new_second_name
-    else:
-        student.second_name = student.get('second_name', '')  # Ensure the field exists
     if new_last_name:
         student.last_name = new_last_name
     if new_second_last_name:
         student.second_last_name = new_second_last_name
-    else:
-        student.second_last_name = student.get('second_last_name', '')  # Ensure the field exists
 
     print("Student full name updated successfully.")
 
@@ -329,7 +331,7 @@ def display_student_info(students):
     
     for i, student in enumerate(students, 1):
         print(f"\n--- Student #{i} ---")
-        print(f"Name: {student.fullname()}")
+        print(f"Name: {student.full_name()}")
         print(f"Section: {student.section}")
         print("Grades:")
         for subject, grade in student.grades.items():
