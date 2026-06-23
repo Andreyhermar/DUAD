@@ -16,15 +16,22 @@ class BankAccount:
 
 
 class SavingsAccount(BankAccount):
-    def withdraw_money(self, amount):
-        min_balance = 0
-        success = super().withdraw_money(amount)
+    def __init__(self, balance, min_balance=0):
+        super().__init__(balance)
+        self.min_balance = min_balance
 
-        if not success:
+    def withdraw_money(self, amount):
+        if self.balance - amount < self.min_balance:
             raise ValueError(
-                f"The amount withdrawn cannot exceed the current balance ({self.balance})"
+                f"Withdrawal denied. Balance cannot go below {self.min_balance}"
             )
 
-my_account = SavingsAccount(10000)
+        return super().withdraw_money(amount)
+
+
+my_account = SavingsAccount(10000, min_balance=500)
+
 my_account.deposit_money(500)
-my_account.withdraw_money(11000)
+my_account.withdraw_money(6000)
+
+my_account.withdraw_money(1200)
