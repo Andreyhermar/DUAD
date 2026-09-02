@@ -30,7 +30,7 @@ class User(ABC):
         pass
     
     @abstractmethod
-    def has_permission(self):
+    def has_permission(self, permission):
         pass
 
 class AdminUser(User):
